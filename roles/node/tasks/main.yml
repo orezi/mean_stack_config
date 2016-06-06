@@ -1,0 +1,14 @@
+---
+- name: Install Nodejs
+  apt: name={{item}} state=latest
+  register: result
+  with_items:
+    - nodejs
+    - git
+
+- name: Install required packages
+  npm: name={{item}} global=yes state=latest
+  when: result|success
+  with_items:
+    - grunt-cli
+    - bower
