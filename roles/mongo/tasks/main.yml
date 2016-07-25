@@ -1,22 +1,24 @@
 ---
-- name: MongoDB | Fetch 10Gen signing key
-  command: apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+- name: Check if MongoDB is installed
+  command: bash -c "dpkg --get-selections | grep mongodb"
+  register: mongodb_installed
+  ignore_errors: True
+  tags:
+    - mongodb
 
-- name: MongoDB | Add 10Gen repository
-  shell: 
-    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/10gen.list
-    creates=/etc/apt/sources.list.d/10gen.list
-
-- name: MongoDB | Install latest MongoDB release 
-  apt: pkg=mongodb-10gen state=present update_cache=yes
-
-- name: Install dependencies
-  apt: name={{item}} state=latest
+- name: Install MongoDB and dependencies
+  apt: name={{item}} state=present update_cache=yes force=yes
+  when: mongodb_installed|failed
   with_items:
+    - mongodb-org
     - build-essential
     - openssl
     - libssl-dev
     - pkg-config
+  tags:
+    - mongodb
 
 - name: MongoDB | Insure deamon is running correctly
   service: name=mongodb state=started
+  tags:
+    - mongodb
