@@ -1,9 +1,9 @@
 ---
 - hosts: meansetup
-  remote_user: vagrant
+  remote_user: ubuntu
   become: yes
   become_method: sudo
   roles:
-  - provision
+  - setup
   - node
   - mongo
