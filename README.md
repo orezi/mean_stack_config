@@ -12,7 +12,7 @@ In the ```inventory.ini``` file, replace the Ip address and path to private key 
 
 Then to run the playbook
 
-**RUN** `ansible-playbook playbook.yml -f 10`
+**RUN** `ansible-playbook -i inventory.ini playbook.main.yml`
 
 **TO TEST**
 cd into features/step_definitions
